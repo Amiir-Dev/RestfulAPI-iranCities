@@ -8,8 +8,8 @@ use App\Services\IsValid;
 use App\Utilities\Response;
 
 $request_method = $_SERVER['REQUEST_METHOD'];
-$request_body = json_decode(file_get_contents('php://input'), true);
-// $request_body = file_get_contents('php://input');
+// $request_body = json_decode(file_get_contents('php://input'), true);
+$request_body = file_get_contents('php://input');
 $city_service = new CityService();
 $IsValid = new IsValid();
 
@@ -27,12 +27,15 @@ switch ($request_method) {
             'province_id' => $province_id,
             'page' => $_GET['page'] ?? null,
             'pagesize' => $_GET['pagesize'] ?? null,
+            'fields' => $_GET['fields'] ?? null,
+            'orderby' => $_GET['orderby'] ?? null
         ];
         $response = $city_service->getCities($request_data);
         Response::respondAndDie($response, Response::HTTP_OK);
 
 
     case 'POST':
+        // var_dump($request_body);
         if (!($IsValid->city($request_body)))
             return false;
 
