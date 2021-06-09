@@ -1,0 +1,12 @@
+{
+    "name": "aabouei/tokengenerator",
+    "require": {
+        "firebase/php-jwt": "^5.3"
+    },
+    "authors": [
+        {
+            "name": "Amir",
+            "email": "abouei.me@gmail.com"
+        }
+    ]
+}

@@ -1,22 +1,43 @@
 <?php
 
 include '../../../loader.php';
-include '../../../App/iran.php';
 
 use App\Services\CityService;
 use App\Services\IsValid;
 use App\Utilities\Response;
+use App\Utilities\CacheUtility;
+
+
+
+# check Authorization (use a jwt token)
+$token = getBearerToken();
+$user = isValidToken($token);
+if (!$user)
+    Response::respondAndDie("Invalid Token!!!", Response::HTTP_UNAUTHORIZED);
+
+# Authorization OK
+ 
+# get request token and validate it
+
+
 
 $request_method = $_SERVER['REQUEST_METHOD'];
 // $request_body = json_decode(file_get_contents('php://input'), true);
 $request_body = file_get_contents('php://input');
+
+
 $city_service = new CityService();
 $IsValid = new IsValid();
 
 
 switch ($request_method) {
     case 'GET':
+        CacheUtility::start();
         $province_id = $_GET['province_id'] ?? null;
+
+        if(!hasAccessToProvince($user, $province_id))
+            Response::respondAndDie("You have no access to this province", Response::HTTP_FORBIDDEN);
+        
 
         #------ Validator ------#
         if (isset($province_id))
@@ -31,17 +52,19 @@ switch ($request_method) {
             'orderby' => $_GET['orderby'] ?? null
         ];
         $response = $city_service->getCities($request_data);
-        Response::respondAndDie($response, Response::HTTP_OK);
+
+        echo Response::respond($response, Response::HTTP_OK);
+        CacheUtility::end();
+        die();
 
 
     case 'POST':
-        // var_dump($request_body);
         if (!($IsValid->city($request_body)))
             return false;
 
         $response = $city_service->createCities($request_body);
         Response::respondAndDie($response, Response::HTTP_CREATED);
-
+        break;
 
     case 'PUT':
         [$city_id, $city_name] = [$request_body['city_id'], $request_body['city_name']];
