@@ -6,16 +6,20 @@
     </form>
 
     <?php
+
+    use App\Services\userService;
+    use App\Services\tokenService;
+
     include_once '../loader.php';
     if ($_SERVER['REQUEST_METHOD'] != 'POST')
         die();
 
     $email = $_POST['email'];
-    $user = getUserByEmail($email);
+    $user = (new userService)->getUserByEmail($email);
     if (is_null($user))
         die('User not Exists!');
 
-    $jwt = createApiToken($user);
+    $jwt = (new tokenService)->create($user);
     echo "jwt token for $user->name : <br><textarea style='width:100%'>$jwt</textarea>";
 
     ?>

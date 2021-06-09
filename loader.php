@@ -1,14 +1,7 @@
 <?php
 
-# Cache Constants
-define('CACHE_ENABLED', 0);   // Enabling/Disabling Cache Tools
-define('CACHE_DIR', __DIR__ . '/cache/');
-
-# Athorization Constants
-define('JWT_KEY', 'Iran-ApI%-Token!+Fgene*/');
-define('JWT_ALG', 'HS256');
-
-
+include 'App/bootstrap/constants.php';
+include 'App/bootstrap/config.php';
 include 'App/iran.php';
 include 'vendor/autoload.php';
 

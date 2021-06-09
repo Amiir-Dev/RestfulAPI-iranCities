@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Utilities;
+include "../bootstrap/constants.php";
 
 class CacheUtility
 {
     protected static $cache_file;
     protected static $cache_enabled = CACHE_ENABLED;
-    const EXPIRE_TIME = 3600;   // 1 hour
 
 
     public static function init()
@@ -18,7 +18,7 @@ class CacheUtility
 
     public static function cache_exits()
     {
-        return (file_exists(self::$cache_file) && (time() - self::EXPIRE_TIME) < filemtime(self::$cache_file));
+        return (file_exists(self::$cache_file) && (time() - EXPIRE_TIME) < filemtime(self::$cache_file));
     }
 
     public static function start()
